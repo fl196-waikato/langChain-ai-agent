@@ -1,0 +1,30 @@
+services:
+  ai-agent:
+    build: .
+    container_name: langchain-ai-agent
+    environment:
+      # 从环境变量或.env文件读取
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - TAVILY_API_KEY=${TAVILY_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    volumes:
+      # 挂载.env文件（可选）
+      #- ./.env:/app/.env:ro
+      # 如果需要持久化数据，可以挂载数据卷
+      - ai-agent-data:/app/data
+    ports:
+      # 如果需要Web接口，取消注释下面的行
+      - "8000:8000"
+    restart: unless-stopped
+    stdin_open: true  # 等价于 docker run -i
+    tty: true         # 等价于 docker run -t
+    networks:
+      - ai-agent-network
+
+networks:
+  ai-agent-network:
+    driver: bridge
+
+volumes:
+  ai-agent-data:
